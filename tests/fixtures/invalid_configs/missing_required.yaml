@@ -1,0 +1,5 @@
+# Invalid configuration - missing required fields
+version: 1
+spaces:
+  - title: "Missing space_id and warehouse_id"
+    # Missing: space_id, warehouse_id

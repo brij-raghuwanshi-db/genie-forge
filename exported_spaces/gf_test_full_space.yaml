@@ -1,0 +1,26 @@
+space_id: gf_test_full_space
+title: GF_Test_Full_Space
+warehouse_id: 6c5c02379eea0732
+version: 2
+sample_questions:
+- id: dea285c290ab4d178c4791bc19b19946
+  question:
+  - Who are our top 10 customers?
+- id: de4ebbc40f964bdab690d29299d68d39
+  question:
+  - Show sales trend by month
+- id: 866caa51848f4989a1d65d73ca901ccf
+  question:
+  - What is total revenue?
+- id: 11a025ad9a4340dc898a14eaa0f54299
+  question:
+  - Compare revenue by region
+data_sources:
+  tables:
+  - identifier: brij_cat.default.customers
+  - identifier: brij_cat.default.employees
+  - identifier: brij_cat.default.products
+  - identifier: brij_cat.default.sales
+instructions:
+  text_instructions:
+  - id: 056cfe67afd44fa1a3cc781bc86bc5f5

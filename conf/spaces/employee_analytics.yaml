@@ -1,0 +1,462 @@
+# Employee Analytics Genie Space Configuration
+# ==============================================
+# A comprehensive example demonstrating:
+# - Multiple related tables
+# - Self-joins (employees → managers)
+# - Column configurations with synonyms and dictionaries
+# - Complex instructions and example SQLs
+# - Benchmark questions for testing
+#
+# This configuration expects the tables to exist in your catalog/schema.
+# Use: genie-forge setup-demo --catalog <catalog> --schema <schema>
+#
+# Variable substitution: ${variable_name} are resolved from:
+#   1. Environment config (conf/environments/dev.yaml or prod.yaml)
+#   2. System environment variables
+#   3. CLI-provided values
+
+version: 2
+author: "data_platform_team"
+description: |
+  Genie space for HR analytics including:
+  - Employee demographics and reporting structure
+  - Department and location analysis
+  - Manager hierarchy (self-join example)
+  - Salary analytics and comparisons
+
+spaces:
+  - space_id: "employee_analytics"
+    title: "Employee Analytics Dashboard"
+    description: |
+      HR Analytics Genie space for workforce insights.
+      Supports questions about employees, departments, 
+      reporting structures, and compensation.
+    warehouse_id: "${warehouse_id}"
+    parent_path: "${parent_path}"
+    tags:
+      - "hr"
+      - "analytics"
+      - "employee"
+      - "workforce"
+    
+    # Sample questions that appear in the Genie UI
+    # These guide users on what they can ask
+    sample_questions:
+      - "How many employees do we have in each department?"
+      - "Who reports to John Smith?"
+      - "What is the average salary by job title?"
+      - "Show the org chart for the Engineering department"
+      - "Which employees have been here longest?"
+      - "Compare salaries between managers and individual contributors"
+      - "Find all employees in the California office"
+    
+    # Data sources - the tables Genie can query
+    data_sources:
+      tables:
+        # ========================================
+        # Employees table - main fact table
+        # ========================================
+        - identifier: "${catalog}.${schema}.employees"
+          description:
+            - "Employee master data including demographics and reporting structure"
+            - "Each row represents one employee with their current information"
+            - "Contains manager_id for self-referential hierarchy (employee reports to manager)"
+            - "Updated nightly from HR system via ETL pipeline"
+          column_configs:
+            - column_name: "employee_id"
+              description: "Unique identifier for the employee (primary key)"
+              synonyms:
+                - "emp_id"
+                - "id"
+                - "employee number"
+            
+            - column_name: "first_name"
+              description: "Employee's first/given name"
+              synonyms:
+                - "first"
+                - "given name"
+            
+            - column_name: "last_name"
+              description: "Employee's last/family name"
+              synonyms:
+                - "last"
+                - "surname"
+                - "family name"
+            
+            - column_name: "email"
+              description: "Corporate email address"
+              synonyms:
+                - "email address"
+                - "work email"
+            
+            - column_name: "job_title"
+              description: "Current job title/position"
+              synonyms:
+                - "title"
+                - "position"
+                - "role"
+              build_value_dictionary: true
+            
+            - column_name: "department_id"
+              description: "Foreign key to departments table"
+            
+            - column_name: "manager_id"
+              description: |
+                Self-referential foreign key - references another employee_id 
+                who is this employee's direct manager. NULL for top-level executives.
+              synonyms:
+                - "reports_to"
+                - "supervisor_id"
+            
+            - column_name: "hire_date"
+              description: "Date the employee was hired"
+              synonyms:
+                - "start_date"
+                - "join_date"
+                - "date hired"
+              get_example_values: true
+            
+            - column_name: "salary"
+              description: "Annual salary in USD"
+              synonyms:
+                - "compensation"
+                - "pay"
+                - "annual salary"
+            
+            - column_name: "location_id"
+              description: "Foreign key to locations table"
+            
+            - column_name: "is_active"
+              description: "Whether the employee is currently active (true/false)"
+              synonyms:
+                - "active"
+                - "current"
+              build_value_dictionary: true
+        
+        # ========================================
+        # Departments table - dimension table
+        # ========================================
+        - identifier: "${catalog}.${schema}.departments"
+          description:
+            - "Department reference data"
+            - "Contains department names, budgets, and cost centers"
+          column_configs:
+            - column_name: "department_id"
+              description: "Unique department identifier (primary key)"
+              synonyms:
+                - "dept_id"
+            
+            - column_name: "department_name"
+              description: "Name of the department"
+              synonyms:
+                - "dept_name"
+                - "department"
+                - "team"
+              build_value_dictionary: true
+            
+            - column_name: "budget"
+              description: "Annual department budget in USD"
+              synonyms:
+                - "dept_budget"
+                - "annual budget"
+            
+            - column_name: "cost_center"
+              description: "Accounting cost center code"
+              build_value_dictionary: true
+        
+        # ========================================
+        # Locations table - dimension table
+        # ========================================
+        - identifier: "${catalog}.${schema}.locations"
+          description:
+            - "Office location reference data"
+            - "Physical office addresses and metadata"
+          column_configs:
+            - column_name: "location_id"
+              description: "Unique location identifier (primary key)"
+            
+            - column_name: "city"
+              description: "City where the office is located"
+              synonyms:
+                - "office city"
+              build_value_dictionary: true
+            
+            - column_name: "state"
+              description: "State/province"
+              synonyms:
+                - "province"
+                - "region"
+              build_value_dictionary: true
+            
+            - column_name: "country"
+              description: "Country name"
+              build_value_dictionary: true
+            
+            - column_name: "address"
+              description: "Full street address"
+              synonyms:
+                - "office address"
+                - "street address"
+    
+    # Instructions guide Genie's behavior
+    instructions:
+      # Text instructions - general guidance for Genie
+      text_instructions:
+        - content: |
+            IMPORTANT: The employees table has a self-referential relationship.
+            The manager_id column references employee_id in the same table.
+            
+            To find an employee's manager, use a self-join:
+            SELECT e.first_name, e.last_name, m.first_name as manager_first_name
+            FROM employees e
+            LEFT JOIN employees m ON e.manager_id = m.employee_id
+        
+        - content: |
+            When asked about "direct reports" or "team members", query employees 
+            where manager_id equals the specified manager's employee_id.
+            
+            Example: "Who reports to John Smith?"
+            SELECT e.* 
+            FROM employees e
+            JOIN employees m ON e.manager_id = m.employee_id
+            WHERE m.first_name = 'John' AND m.last_name = 'Smith'
+        
+        - content: |
+            For organizational hierarchy questions (like "org chart"), use 
+            recursive CTEs or multiple self-joins to traverse the management chain.
+        
+        - content: |
+            Always exclude inactive employees (is_active = false) unless 
+            specifically asked about terminated/former employees.
+        
+        - content: |
+            When calculating averages for salary, exclude NULL values and 
+            format results as currency with 2 decimal places.
+        
+        - content: |
+            "Tenure" or "years of service" should be calculated as:
+            DATEDIFF(CURRENT_DATE(), hire_date) / 365
+      
+      # Example questions with expected SQL - teaches Genie the patterns
+      example_question_sqls:
+        - question: "Who reports to John Smith?"
+          sql: |
+            -- Self-join to find direct reports
+            SELECT 
+                e.employee_id,
+                e.first_name || ' ' || e.last_name AS employee_name,
+                e.job_title,
+                e.email
+            FROM ${catalog}.${schema}.employees e
+            INNER JOIN ${catalog}.${schema}.employees m 
+                ON e.manager_id = m.employee_id
+            WHERE m.first_name = 'John' 
+              AND m.last_name = 'Smith'
+              AND e.is_active = true
+            ORDER BY e.last_name
+        
+        - question: "Show the management chain for employee ID 123"
+          sql: |
+            -- Recursive CTE to traverse management hierarchy (self-join chain)
+            WITH RECURSIVE management_chain AS (
+                -- Base case: start with the employee
+                SELECT 
+                    employee_id,
+                    first_name || ' ' || last_name AS name,
+                    job_title,
+                    manager_id,
+                    0 AS level
+                FROM ${catalog}.${schema}.employees
+                WHERE employee_id = 123
+                
+                UNION ALL
+                
+                -- Recursive case: get each manager up the chain
+                SELECT 
+                    e.employee_id,
+                    e.first_name || ' ' || e.last_name,
+                    e.job_title,
+                    e.manager_id,
+                    mc.level + 1
+                FROM ${catalog}.${schema}.employees e
+                INNER JOIN management_chain mc 
+                    ON e.employee_id = mc.manager_id
+            )
+            SELECT * FROM management_chain
+            ORDER BY level
+        
+        - question: "What is the average salary by department?"
+          sql: |
+            SELECT 
+                d.department_name,
+                COUNT(e.employee_id) AS employee_count,
+                ROUND(AVG(e.salary), 2) AS avg_salary,
+                MIN(e.salary) AS min_salary,
+                MAX(e.salary) AS max_salary
+            FROM ${catalog}.${schema}.employees e
+            INNER JOIN ${catalog}.${schema}.departments d 
+                ON e.department_id = d.department_id
+            WHERE e.is_active = true
+            GROUP BY d.department_name
+            ORDER BY avg_salary DESC
+        
+        - question: "Compare manager vs individual contributor salaries"
+          sql: |
+            -- Managers are employees who have at least one direct report
+            WITH managers AS (
+                SELECT DISTINCT manager_id
+                FROM ${catalog}.${schema}.employees
+                WHERE manager_id IS NOT NULL
+            )
+            SELECT 
+                CASE 
+                    WHEN m.manager_id IS NOT NULL THEN 'Manager'
+                    ELSE 'Individual Contributor'
+                END AS role_type,
+                COUNT(*) AS count,
+                ROUND(AVG(e.salary), 2) AS avg_salary,
+                ROUND(MEDIAN(e.salary), 2) AS median_salary
+            FROM ${catalog}.${schema}.employees e
+            LEFT JOIN managers m ON e.employee_id = m.manager_id
+            WHERE e.is_active = true
+            GROUP BY role_type
+        
+        - question: "Find employees in California with their managers"
+          sql: |
+            -- Demonstrates joining locations AND self-join for managers
+            SELECT 
+                e.first_name || ' ' || e.last_name AS employee_name,
+                e.job_title,
+                e.email,
+                m.first_name || ' ' || m.last_name AS manager_name,
+                l.city,
+                l.state
+            FROM ${catalog}.${schema}.employees e
+            INNER JOIN ${catalog}.${schema}.locations l 
+                ON e.location_id = l.location_id
+            LEFT JOIN ${catalog}.${schema}.employees m 
+                ON e.manager_id = m.employee_id
+            WHERE l.state = 'California'
+              AND e.is_active = true
+            ORDER BY e.last_name
+        
+        - question: "Show employees hired in the last 90 days with their department"
+          sql: |
+            SELECT 
+                e.first_name || ' ' || e.last_name AS employee_name,
+                e.hire_date,
+                e.job_title,
+                d.department_name,
+                m.first_name || ' ' || m.last_name AS manager_name
+            FROM ${catalog}.${schema}.employees e
+            INNER JOIN ${catalog}.${schema}.departments d 
+                ON e.department_id = d.department_id
+            LEFT JOIN ${catalog}.${schema}.employees m 
+                ON e.manager_id = m.employee_id
+            WHERE e.hire_date >= DATE_SUB(CURRENT_DATE(), 90)
+              AND e.is_active = true
+            ORDER BY e.hire_date DESC
+        
+        - question: "Which managers have more than 5 direct reports?"
+          sql: |
+            -- Self-join aggregation to count direct reports
+            SELECT 
+                m.employee_id AS manager_id,
+                m.first_name || ' ' || m.last_name AS manager_name,
+                m.job_title,
+                d.department_name,
+                COUNT(e.employee_id) AS direct_report_count
+            FROM ${catalog}.${schema}.employees e
+            INNER JOIN ${catalog}.${schema}.employees m 
+                ON e.manager_id = m.employee_id
+            INNER JOIN ${catalog}.${schema}.departments d 
+                ON m.department_id = d.department_id
+            WHERE e.is_active = true
+            GROUP BY m.employee_id, m.first_name, m.last_name, m.job_title, d.department_name
+            HAVING COUNT(e.employee_id) > 5
+            ORDER BY direct_report_count DESC
+      
+      # SQL functions available for Genie to use
+      sql_functions:
+        - identifier: "${catalog}.${schema}.calculate_tenure_years"
+          description: |
+            Calculate employee tenure in years from hire date.
+            Usage: calculate_tenure_years(hire_date)
+            Returns: DECIMAL number of years
+        
+        - identifier: "${catalog}.${schema}.percent_change"
+          description: |
+            Calculate percentage change between two values.
+            Usage: percent_change(old_value, new_value)
+            Returns: DECIMAL percentage
+      
+      # Join specifications - help Genie understand table relationships
+      join_specs:
+        # Employee to Department
+        - left:
+            identifier: "${catalog}.${schema}.employees"
+            alias: employees
+          right:
+            identifier: "${catalog}.${schema}.departments"
+            alias: departments
+          sql:
+            - '`employees`.`department_id` = `departments`.`department_id`'
+            - '--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--'
+          instruction:
+            - "Link employees to their department details"
+        
+        # Employee to Location
+        - left:
+            identifier: "${catalog}.${schema}.employees"
+            alias: employees
+          right:
+            identifier: "${catalog}.${schema}.locations"
+            alias: locations
+          sql:
+            - '`employees`.`location_id` = `locations`.`location_id`'
+            - '--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--'
+          instruction:
+            - "Link employees to their office location"
+        
+        # Employee to Manager (SELF-JOIN)
+        - left:
+            identifier: "${catalog}.${schema}.employees"
+            alias: e
+          right:
+            identifier: "${catalog}.${schema}.employees"
+            alias: m
+          sql:
+            - '`e`.`manager_id` = `m`.`employee_id`'
+            - '--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--'
+          instruction:
+            - "SELF-JOIN: Link employees to their manager. Use LEFT JOIN because top executives have no manager (manager_id is NULL)."
+    
+    # Benchmark questions for testing Genie accuracy
+    benchmarks:
+      questions:
+        - question: "How many active employees do we have?"
+          expected_sql: |
+            SELECT COUNT(*) AS active_employee_count 
+            FROM ${catalog}.${schema}.employees 
+            WHERE is_active = true
+        
+        - question: "What is the average salary?"
+          expected_sql: |
+            SELECT ROUND(AVG(salary), 2) AS avg_salary 
+            FROM ${catalog}.${schema}.employees 
+            WHERE is_active = true
+        
+        - question: "List all department names"
+          expected_sql: |
+            SELECT DISTINCT department_name 
+            FROM ${catalog}.${schema}.departments 
+            ORDER BY department_name
+        
+        - question: "Find the employee with the longest tenure"
+          expected_sql: |
+            SELECT first_name, last_name, hire_date,
+                   DATEDIFF(CURRENT_DATE(), hire_date) AS days_employed
+            FROM ${catalog}.${schema}.employees 
+            WHERE is_active = true 
+            ORDER BY hire_date ASC 
+            LIMIT 1

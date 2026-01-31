@@ -1,0 +1,224 @@
+# Sales Analytics Genie Space Configuration
+# ===========================================
+# This is a comprehensive example showing all available configuration options.
+# Variables like ${warehouse_id} are resolved from environment configs.
+
+version: 2
+author: "data_team"
+
+spaces:
+  - space_id: "sales_analytics"
+    title: "Sales Analytics Space"
+    description: "Genie space for sales team analytics and reporting"
+    warehouse_id: "${warehouse_id}"
+    parent_path: "${parent_path}"
+    tags:
+      - "sales"
+      - "analytics"
+      - "production"
+    
+    # Sample questions shown in the Genie UI
+    sample_questions:
+      - "What were total sales last month?"
+      - "Show top 10 customers by revenue"
+      - "Compare Q1 vs Q2 performance"
+      - "Which products are trending this quarter?"
+      - "Show monthly sales trend for 2024"
+    
+    # Data sources configuration
+    data_sources:
+      tables:
+        - identifier: "${catalog}.${schema}.sales"
+          description:
+            - "Sales transactions with customer and product information"
+            - "Contains revenue, quantity, dates, and regional data"
+            - "Updated daily via ETL pipeline"
+          column_configs:
+            - column_name: "region"
+              description: "Sales region (APAC, EMEA, AMER)"
+              synonyms:
+                - "territory"
+                - "area"
+                - "geo"
+              build_value_dictionary: true
+            
+            - column_name: "sale_date"
+              description: "Date of the transaction"
+              synonyms:
+                - "date"
+                - "transaction_date"
+              get_example_values: true
+            
+            - column_name: "amount"
+              description: "Sale amount in USD"
+              synonyms:
+                - "revenue"
+                - "sales"
+                - "total"
+                - "value"
+            
+            - column_name: "quantity"
+              description: "Number of units sold"
+              synonyms:
+                - "qty"
+                - "units"
+            
+            - column_name: "product_id"
+              description: "Reference to product catalog"
+            
+            - column_name: "customer_id"
+              description: "Reference to customer master data"
+        
+        - identifier: "${catalog}.${schema}.customers"
+          description:
+            - "Customer master data"
+            - "Contains demographics and segmentation"
+          column_configs:
+            - column_name: "customer_id"
+              description: "Unique customer identifier"
+            
+            - column_name: "customer_name"
+              description: "Full customer name"
+              synonyms:
+                - "client"
+                - "account"
+                - "name"
+            
+            - column_name: "segment"
+              description: "Customer segment (Enterprise, SMB, Consumer)"
+              build_value_dictionary: true
+        
+        - identifier: "${catalog}.${schema}.products"
+          description:
+            - "Product catalog"
+          column_configs:
+            - column_name: "product_id"
+              description: "Unique product identifier"
+            
+            - column_name: "product_name"
+              description: "Product display name"
+              synonyms:
+                - "item"
+                - "product"
+            
+            - column_name: "category"
+              description: "Product category"
+              build_value_dictionary: true
+    
+    # Instructions for Genie
+    instructions:
+      # Text instructions guide Genie's behavior
+      text_instructions:
+        - content: |
+            Always filter data by the current user's region using the 
+            user_row_filter function for security compliance.
+        
+        - content: |
+            When asked about "quarterly" data, use fiscal quarters:
+            Q1=Jan-Mar, Q2=Apr-Jun, Q3=Jul-Sep, Q4=Oct-Dec.
+        
+        - content: |
+            For year-over-year comparisons, use the percent_change function 
+            to calculate growth rates.
+        
+        - content: |
+            When displaying currency values, format with 2 decimal places 
+            and include USD suffix.
+        
+        - content: |
+            Default to the current year when date range is not specified.
+      
+      # Example questions with expected SQL
+      example_question_sqls:
+        - question: "What are the top 10 products by revenue?"
+          sql: |
+            SELECT p.product_name, SUM(s.amount) as total_revenue
+            FROM ${catalog}.${schema}.sales s
+            JOIN ${catalog}.${schema}.products p ON s.product_id = p.product_id
+            GROUP BY p.product_name
+            ORDER BY total_revenue DESC
+            LIMIT 10
+        
+        - question: "Show monthly sales trend for 2024"
+          sql: |
+            SELECT DATE_TRUNC('month', sale_date) as month,
+                   SUM(amount) as monthly_revenue
+            FROM ${catalog}.${schema}.sales
+            WHERE YEAR(sale_date) = 2024
+            GROUP BY 1
+            ORDER BY 1
+        
+        - question: "Who are our top customers in APAC?"
+          sql: |
+            SELECT c.customer_name, SUM(s.amount) as total_spent
+            FROM ${catalog}.${schema}.sales s
+            JOIN ${catalog}.${schema}.customers c ON s.customer_id = c.customer_id
+            WHERE s.region = 'APAC'
+            GROUP BY c.customer_name
+            ORDER BY total_spent DESC
+            LIMIT 10
+        
+        - question: "What is the average order value by segment?"
+          sql: |
+            SELECT c.segment, 
+                   AVG(s.amount) as avg_order_value,
+                   COUNT(*) as order_count
+            FROM ${catalog}.${schema}.sales s
+            JOIN ${catalog}.${schema}.customers c ON s.customer_id = c.customer_id
+            GROUP BY c.segment
+            ORDER BY avg_order_value DESC
+      
+      # SQL functions available to Genie
+      sql_functions:
+        - identifier: "${catalog}.${schema}.percent_change"
+          description: "Calculate percentage change between two values: percent_change(old_value, new_value)"
+        
+        - identifier: "${catalog}.${schema}.calculate_tenure_years"
+          description: "Calculate years of tenure from hire date"
+      
+      # Join specifications help Genie understand table relationships
+      join_specs:
+        - left:
+            identifier: "${catalog}.${schema}.sales"
+            alias: sales
+          right:
+            identifier: "${catalog}.${schema}.customers"
+            alias: customers
+          sql:
+            - '`sales`.`customer_id` = `customers`.`customer_id`'
+            - '--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--'
+          instruction:
+            - "Link sales transactions to customer details"
+        
+        - left:
+            identifier: "${catalog}.${schema}.sales"
+            alias: sales
+          right:
+            identifier: "${catalog}.${schema}.products"
+            alias: products
+          sql:
+            - '`sales`.`product_id` = `products`.`product_id`'
+            - '--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--'
+          instruction:
+            - "Link sales transactions to product catalog"
+    
+    # Benchmarks for testing Genie accuracy
+    benchmarks:
+      questions:
+        - question: "What was total revenue in 2024?"
+          expected_sql: |
+            SELECT SUM(amount) as total_revenue 
+            FROM ${catalog}.${schema}.sales 
+            WHERE YEAR(sale_date) = 2024
+        
+        - question: "How many customers do we have?"
+          expected_sql: |
+            SELECT COUNT(DISTINCT customer_id) as customer_count 
+            FROM ${catalog}.${schema}.customers
+        
+        - question: "What are total sales by region?"
+          expected_sql: |
+            SELECT region, SUM(amount) as total_sales
+            FROM ${catalog}.${schema}.sales
+            GROUP BY region
+            ORDER BY total_sales DESC

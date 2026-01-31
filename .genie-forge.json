@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "project_id": "genie-forge-project",
+  "project_name": null,
+  "created_at": "2026-01-30T11:38:09.220637+00:00",
+  "environments": {
+    "dev": {
+      "workspace_url": "https://adb-7405611072871894.14.azuredatabricks.net",
+      "last_applied": "2026-01-30T12:06:52.977695+00:00",
+      "spaces": {
+        "gf_test_full_space": {
+          "logical_id": "gf_test_full_space",
+          "databricks_space_id": "01f0fdd06daf166b8ad42b816ef3a99c",
+          "title": "GF_Test_Full_Space",
+          "config_hash": "91a6aae5c3b7f55089f558f633c85f1c74574e06e3b3e1e01ac8174af3d7bfe2",
+          "applied_hash": "91a6aae5c3b7f55089f558f633c85f1c74574e06e3b3e1e01ac8174af3d7bfe2",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T11:40:08.504782+00:00",
+          "error": null
+        },
+        "simple_demo": {
+          "logical_id": "simple_demo",
+          "databricks_space_id": "01f0fdd2d9bf1628b990ee6f4e967563",
+          "title": "Simple Demo Space",
+          "config_hash": "e1d479d739f6d10a5e65ea673356ef01d9d4f246ae67b0243707f492af13f114",
+          "applied_hash": "e1d479d739f6d10a5e65ea673356ef01d9d4f246ae67b0243707f492af13f114",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T11:57:29.213634+00:00",
+          "error": null
+        },
+        "gf_test_full_v2": {
+          "logical_id": "gf_test_full_v2",
+          "databricks_space_id": "01f0fdd2e16c154b89a73c707f0cf4e6",
+          "title": "GF_Test_Full_V2",
+          "config_hash": "a037ef2fecde5cb62636513cbe54d024369cfc7ef32460398899853b93eff896",
+          "applied_hash": "a037ef2fecde5cb62636513cbe54d024369cfc7ef32460398899853b93eff896",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T11:57:41.611746+00:00",
+          "error": null
+        },
+        "brij_imported": {
+          "logical_id": "brij_imported",
+          "databricks_space_id": null,
+          "title": "Brij_Space",
+          "config_hash": "319e23666d3ffe7c040b39c8a9e9389efc0797e2107aa03e517acff3060bb8dc",
+          "applied_hash": "319e23666d3ffe7c040b39c8a9e9389efc0797e2107aa03e517acff3060bb8dc",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T11:58:42.395335+00:00",
+          "error": null
+        },
+        "test_join3": {
+          "logical_id": "test_join3",
+          "databricks_space_id": "01f0fdd3ede914979e23b3d6da67b6fe",
+          "title": "Test Join Space 3",
+          "config_hash": "9b90b696cd11fedb4b9a42c45043535105f6dcb8ffcaf8a25da323e872b8bab2",
+          "applied_hash": "9b90b696cd11fedb4b9a42c45043535105f6dcb8ffcaf8a25da323e872b8bab2",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T12:05:12.157413+00:00",
+          "error": null
+        },
+        "test_join4": {
+          "logical_id": "test_join4",
+          "databricks_space_id": "01f0fdd3f42b1000bddaf3f8720b9eca",
+          "title": "Test Join Space 4",
+          "config_hash": "d37f327610b33a206e272973e21e35e8c41e8368b2aed381e79e863978213960",
+          "applied_hash": "d37f327610b33a206e272973e21e35e8c41e8368b2aed381e79e863978213960",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T12:05:22.550643+00:00",
+          "error": null
+        },
+        "sales_analytics": {
+          "logical_id": "sales_analytics",
+          "databricks_space_id": "01f0fdd4203e1aa8b50119d5be6f5766",
+          "title": "Sales Analytics Space",
+          "config_hash": "249adc2c310aed771f1b4fcee7fbc6a8e6c2bf517cd9da6a4b0d1abfa2c61ec2",
+          "applied_hash": "249adc2c310aed771f1b4fcee7fbc6a8e6c2bf517cd9da6a4b0d1abfa2c61ec2",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T12:06:37.097883+00:00",
+          "error": null
+        },
+        "employee_analytics": {
+          "logical_id": "employee_analytics",
+          "databricks_space_id": "01f0fdd429b715e797a74d436bf51d96",
+          "title": "Employee Analytics Dashboard",
+          "config_hash": "016b7f33e7d31b7b486165afc3a56320149d6d6919021007d51c07d426ddb693",
+          "applied_hash": "016b7f33e7d31b7b486165afc3a56320149d6d6919021007d51c07d426ddb693",
+          "status": "APPLIED",
+          "last_applied": "2026-01-30T12:06:52.977647+00:00",
+          "error": null
+        }
+      }
+    }
+  }
+}

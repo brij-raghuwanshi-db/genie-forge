@@ -1,0 +1,43 @@
+# Production Environment Configuration
+# ===========================================
+# This file defines variables and settings for the prod environment.
+# Variables can be referenced in space configs using ${variable_name}
+#
+# ⚠️  IMPORTANT: Replace all <PLACEHOLDER> values before use!
+
+# Workspace settings
+# TODO: Replace with your actual prod workspace URL
+workspace_url: "<YOUR_PROD_WORKSPACE_URL>"  # e.g., "https://adb-9876543210.azuredatabricks.net"
+
+# Authentication (use profile from ~/.databrickscfg)
+# TODO: Replace with your actual profile name
+auth:
+  profile: "<YOUR_PROD_PROFILE>"  # e.g., "PROD" or your profile name from ~/.databrickscfg
+
+# Environment-specific variables
+variables:
+  # Environment name
+  env: "prod"
+  
+  # TODO: Replace with your SQL warehouse ID
+  warehouse_id: "<YOUR_PROD_WAREHOUSE_ID>"  # e.g., "xyz789abc123" from SQL Warehouses page
+  
+  # TODO: Replace with your Unity Catalog name
+  catalog: "<YOUR_PROD_CATALOG>"  # e.g., "my_prod_catalog"
+  
+  # TODO: Replace with your schema name
+  schema: "<YOUR_PROD_SCHEMA>"  # e.g., "genie_prod" or "analytics"
+  
+  # Parent path for Genie spaces
+  parent_path: "/Workspace/Shared/Genie"
+
+# Naming conventions
+naming:
+  prefix: ""  # No prefix for prod
+  title_prefix: ""  # No title prefix for prod
+
+# Settings
+settings:
+  auto_approve: false  # Always require confirmation in prod
+  dry_run: false
+  require_confirmation: true

@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "genie-forge"
+dynamic = ["version"]
+description = "Metadata-driven framework for programmatic Databricks Genie space management"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [
+    { name = "Brijendra Singh Raghuwanshi", email = "brijendra.raghuwanshi@databricks.com" }
+]
+keywords = [
+    "databricks",
+    "genie",
+    "metadata",
+    "infrastructure-as-code",
+    "iac"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "databricks-sdk>=0.20.0",
+    "pydantic>=2.0.0",
+    "PyYAML>=6.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "types-PyYAML>=6.0.0",
+]
+
+[project.scripts]
+genie-forge = "genie_forge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/brij-raghuwanshi-db/genie-forge"
+Documentation = "https://github.com/brij-raghuwanshi-db/genie-forge#readme"
+Repository = "https://github.com/brij-raghuwanshi-db/genie-forge"
+
+[tool.hatch.version]
+path = "src/genie_forge/__about__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/genie_forge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "unit: Fast tests without API calls",
+    "integration: Tests requiring real Databricks API",
+]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true

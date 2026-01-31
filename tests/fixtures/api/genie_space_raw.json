@@ -1,0 +1,201 @@
+{
+  "space_id": "01f0f5c0b9b81968b0df658cb5d23ecf",
+  "title": "Brij_Space",
+  "description": "This is the space description.",
+  "warehouse_id": "6c5c02379eea0732",
+  "serialized_space": {
+    "version": 2,
+    "config": {
+      "sample_questions": [
+        {
+          "id": "01f0fbe3f3231ce4b489307d554ee87b",
+          "question": [
+            "sample questions : what is this table?"
+          ]
+        }
+      ]
+    },
+    "data_sources": {
+      "tables": [
+        {
+          "identifier": "brij_cat.default.employee_table",
+          "column_configs": [
+            {
+              "column_name": "country",
+              "description": [
+                "Get me this employee 4"
+              ],
+              "synonyms": [
+                "ghj"
+              ],
+              "enable_format_assistance": true,
+              "enable_entity_matching": true
+            },
+            {
+              "column_name": "employee_id",
+              "description": [
+                "Get me this employee 1"
+              ],
+              "synonyms": [
+                "abc"
+              ],
+              "enable_format_assistance": true
+            },
+            {
+              "column_name": "employee_name",
+              "description": [
+                "Get me this employee 2"
+              ],
+              "synonyms": [
+                "cdf"
+              ],
+              "enable_format_assistance": true,
+              "enable_entity_matching": true
+            },
+            {
+              "column_name": "state",
+              "description": [
+                "Get me this employee 3"
+              ],
+              "synonyms": [
+                "fgh"
+              ],
+              "enable_format_assistance": true,
+              "enable_entity_matching": true
+            }
+          ]
+        },
+        {
+          "identifier": "brij_cat.default.requirements",
+          "column_configs": [
+            {
+              "column_name": "value",
+              "description": [
+                "sample value"
+              ],
+              "synonyms": [
+                "val"
+              ],
+              "enable_format_assistance": true,
+              "enable_entity_matching": true
+            }
+          ]
+        }
+      ]
+    },
+    "instructions": {
+      "text_instructions": [
+        {
+          "id": "01f0f746e44915429f5f454993dbb596",
+          "content": [
+            "This is a test instruction"
+          ]
+        }
+      ],
+      "example_question_sqls": [
+        {
+          "id": "01f0f746f0bd13c6a7c7d88c6f427e08",
+          "question": [
+            "who am i"
+          ],
+          "sql": [
+            "SELECT current_user()"
+          ]
+        },
+        {
+          "id": "01f0fbe3990d1c23b30c2c16803713f6",
+          "question": [
+            "sample"
+          ],
+          "sql": [
+            "select :param_test as col; "
+          ],
+          "parameters": [
+            {
+              "name": "param_test",
+              "type_hint": "STRING",
+              "description": [
+                "default1"
+              ],
+              "default_value": {
+                "values": [
+                  "\"abcdefg\""
+                ]
+              }
+            }
+          ],
+          "usage_guidance": [
+            "I am trying to test this space"
+          ]
+        }
+      ],
+      "join_specs": [
+        {
+          "id": "01f0fbe36c3f1b7494fa093204a16bb7",
+          "left": {
+            "identifier": "brij_cat.default.employee_table",
+            "alias": "employee_table"
+          },
+          "right": {
+            "identifier": "brij_cat.default.requirements",
+            "alias": "requirements"
+          },
+          "sql": [
+            "`employee_table`.`state` = `requirements`.`value`",
+            "--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_MANY--"
+          ],
+          "instruction": [
+            "aggregation"
+          ]
+        }
+      ],
+      "sql_snippets": {
+        "filters": [
+          {
+            "id": "01f0fbe6085c1807a89e0308c44a85e2",
+            "sql": [
+              "employee_table.country = 'USA'"
+            ],
+            "display_name": "country",
+            "instruction": [
+              "This is a country Filter"
+            ],
+            "synonyms": [
+              "country_fltr"
+            ]
+          }
+        ],
+        "expressions": [
+          {
+            "id": "01f0fbe38e7511458dae8c8122ff4f4c",
+            "sql": [
+              "current_date"
+            ],
+            "display_name": "sample",
+            "instruction": [
+              "just give today's date"
+            ],
+            "synonyms": [
+              "today"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "01f0fbe5ed6c1a0ab250d77e209ffb14",
+            "sql": [
+              "sum(2000)"
+            ],
+            "display_name": "ss",
+            "instruction": [
+              "sample sum this is"
+            ],
+            "synonyms": [
+              "sample sum"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

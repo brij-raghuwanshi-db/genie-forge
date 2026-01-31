@@ -1,0 +1,808 @@
+# =============================================================================
+# GENIE-FORGE: Complete Sample Configuration
+# =============================================================================
+# This file demonstrates ALL available configuration options for a Genie space.
+# Use this as a reference when creating your own configurations.
+#
+# Author: Brijendra Raghuwanshi
+# Version: 2 (API v2 with full lossless migration support)
+#
+# IMPORTANT API NOTES:
+# --------------------
+# 1. All IDs must be lowercase 32-hex UUIDs (auto-generated if not provided)
+# 2. Arrays (text_instructions, join_specs, etc.) must be sorted by ID
+# 3. sql_functions only supports "identifier" field (description stored locally)
+# 4. benchmarks are stored locally only (not sent to API on create/update)
+# 5. Tables must exist in the workspace before creating the space
+# =============================================================================
+
+version: 2
+
+spaces:
+  - space_id: sample_complete_space
+    title: "Complete Sample Genie Space"
+    description: "A comprehensive example showing all available configuration options"
+    warehouse_id: "${warehouse_id}"  # Use variable substitution for flexibility
+    # parent_path: "/Users/your.email@company.com"  # Optional: folder path for the space
+
+    # =========================================================================
+    # SAMPLE QUESTIONS
+    # =========================================================================
+    # Questions shown to users as suggestions. Can be simple strings or objects.
+    sample_questions:
+      # Simple string format (backward compatible)
+      - "What are the total sales by region?"
+      
+      # Object format with ID (recommended for tracking)
+      - id: sq_revenue
+        question:
+          - "What is our total revenue this quarter?"
+      
+      - id: sq_top_products
+        question:
+          - "Which products have the highest profit margins?"
+          - "Show me our best performing products"  # Multiple phrasings
+      
+      - id: sq_customer_analysis
+        question:
+          - "Who are our top 10 customers by lifetime value?"
+      
+      - id: sq_trend
+        question:
+          - "How have sales trended over the last 12 months?"
+
+    # =========================================================================
+    # DATA SOURCES
+    # =========================================================================
+    data_sources:
+      tables:
+        # -----------------------------------------------------------------
+        # Table 1: Sales Transactions (comprehensive example)
+        # -----------------------------------------------------------------
+        - identifier: "${catalog}.${schema}.sales_transactions"
+          description:
+            - "Sales transaction records with customer and product details."
+            - "Updated daily at midnight UTC."
+            - "Primary key: transaction_id"
+          
+          column_configs:
+            # Numeric column with format assistance
+            - column_name: transaction_id
+              description:
+                - "Unique identifier for each transaction"
+                - "Auto-generated sequential integer"
+              synonyms:
+                - "sale_id"
+                - "order_id"
+                - "txn_id"
+              enable_format_assistance: true
+              enable_entity_matching: false
+            
+            # Date column
+            - column_name: transaction_date
+              description:
+                - "Date when the transaction occurred"
+              synonyms:
+                - "sale_date"
+                - "order_date"
+                - "date"
+              enable_format_assistance: true
+            
+            # Foreign key with entity matching
+            - column_name: customer_id
+              description:
+                - "Foreign key to customers table"
+                - "Links to customers.customer_id"
+              synonyms:
+                - "client_id"
+                - "buyer_id"
+              enable_entity_matching: true
+            
+            # Foreign key
+            - column_name: product_id
+              description:
+                - "Foreign key to products table"
+              enable_entity_matching: true
+            
+            # Currency column
+            - column_name: amount
+              description:
+                - "Transaction amount in USD"
+                - "Includes tax and discounts"
+              synonyms:
+                - "total"
+                - "price"
+                - "sale_amount"
+                - "revenue"
+              enable_format_assistance: true
+            
+            # Quantity column
+            - column_name: quantity
+              description:
+                - "Number of units sold"
+              synonyms:
+                - "qty"
+                - "units"
+                - "count"
+            
+            # Categorical column
+            - column_name: payment_method
+              description:
+                - "Payment method used"
+                - "Values: CASH, CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, DIGITAL_WALLET"
+              synonyms:
+                - "payment_type"
+                - "pay_method"
+            
+            # Status column
+            - column_name: status
+              description:
+                - "Transaction status"
+                - "Values: PENDING, COMPLETED, REFUNDED, CANCELLED"
+              synonyms:
+                - "order_status"
+                - "txn_status"
+            
+            # Region column
+            - column_name: region
+              description:
+                - "Sales region code"
+              synonyms:
+                - "territory"
+                - "area"
+                - "zone"
+              enable_entity_matching: true
+
+        # -----------------------------------------------------------------
+        # Table 2: Customers
+        # -----------------------------------------------------------------
+        - identifier: "${catalog}.${schema}.customers"
+          description:
+            - "Customer master data with contact and segmentation info."
+            - "Contains both B2B and B2C customers."
+          
+          column_configs:
+            - column_name: customer_id
+              description:
+                - "Unique customer identifier"
+              enable_format_assistance: true
+            
+            - column_name: customer_name
+              description:
+                - "Full name or company name"
+              synonyms:
+                - "name"
+                - "client_name"
+                - "account_name"
+              enable_entity_matching: true
+            
+            - column_name: email
+              description:
+                - "Primary email address"
+              synonyms:
+                - "email_address"
+                - "contact_email"
+            
+            - column_name: customer_type
+              description:
+                - "B2B or B2C classification"
+              synonyms:
+                - "type"
+                - "segment"
+            
+            - column_name: registration_date
+              description:
+                - "Date customer was first registered"
+              synonyms:
+                - "signup_date"
+                - "created_date"
+                - "join_date"
+            
+            - column_name: lifetime_value
+              description:
+                - "Total revenue from this customer (calculated)"
+              synonyms:
+                - "ltv"
+                - "clv"
+                - "total_spend"
+              enable_format_assistance: true
+
+        # -----------------------------------------------------------------
+        # Table 3: Products
+        # -----------------------------------------------------------------
+        - identifier: "${catalog}.${schema}.products"
+          description:
+            - "Product catalog with pricing and category information."
+          
+          column_configs:
+            - column_name: product_id
+              description:
+                - "Unique product identifier (SKU)"
+              synonyms:
+                - "sku"
+                - "item_id"
+              enable_format_assistance: true
+            
+            - column_name: product_name
+              description:
+                - "Product display name"
+              synonyms:
+                - "name"
+                - "item_name"
+                - "title"
+              enable_entity_matching: true
+            
+            - column_name: category
+              description:
+                - "Product category"
+              synonyms:
+                - "product_category"
+                - "type"
+                - "group"
+              enable_entity_matching: true
+            
+            - column_name: subcategory
+              description:
+                - "Product subcategory"
+              synonyms:
+                - "sub_category"
+                - "subtype"
+            
+            - column_name: unit_price
+              description:
+                - "Standard retail price in USD"
+              synonyms:
+                - "price"
+                - "retail_price"
+                - "list_price"
+              enable_format_assistance: true
+            
+            - column_name: cost
+              description:
+                - "Unit cost (COGS) in USD"
+              synonyms:
+                - "unit_cost"
+                - "cogs"
+              enable_format_assistance: true
+            
+            - column_name: is_active
+              description:
+                - "Whether product is currently available"
+              synonyms:
+                - "active"
+                - "available"
+                - "in_stock"
+
+        # -----------------------------------------------------------------
+        # Table 4: Employees (for self-join example)
+        # -----------------------------------------------------------------
+        - identifier: "${catalog}.${schema}.employees"
+          description:
+            - "Employee directory with manager hierarchy."
+            - "The manager_id column references employee_id in the same table (self-referential)."
+          
+          column_configs:
+            - column_name: employee_id
+              description:
+                - "Unique employee identifier"
+              enable_format_assistance: true
+            
+            - column_name: employee_name
+              description:
+                - "Full name"
+              synonyms:
+                - "name"
+                - "full_name"
+              enable_entity_matching: true
+            
+            - column_name: manager_id
+              description:
+                - "Foreign key to employee_id of this person's manager"
+                - "NULL for top-level executives (CEO)"
+              synonyms:
+                - "reports_to"
+                - "supervisor_id"
+              enable_entity_matching: true
+            
+            - column_name: department
+              description:
+                - "Department name"
+              synonyms:
+                - "dept"
+                - "team"
+              enable_entity_matching: true
+            
+            - column_name: job_title
+              description:
+                - "Current job title"
+              synonyms:
+                - "title"
+                - "position"
+                - "role"
+            
+            - column_name: hire_date
+              description:
+                - "Date of hire"
+              synonyms:
+                - "start_date"
+                - "join_date"
+            
+            - column_name: salary
+              description:
+                - "Annual salary in USD"
+              synonyms:
+                - "compensation"
+                - "pay"
+                - "annual_salary"
+              enable_format_assistance: true
+
+        # -----------------------------------------------------------------
+        # Table 5: Regions (reference/dimension table)
+        # -----------------------------------------------------------------
+        - identifier: "${catalog}.${schema}.regions"
+          description:
+            - "Geographic region reference data."
+          
+          column_configs:
+            - column_name: region_code
+              description:
+                - "Short region code (e.g., NA, EMEA, APAC)"
+              synonyms:
+                - "code"
+                - "region_id"
+            
+            - column_name: region_name
+              description:
+                - "Full region name"
+              synonyms:
+                - "name"
+              enable_entity_matching: true
+            
+            - column_name: country_count
+              description:
+                - "Number of countries in this region"
+
+    # =========================================================================
+    # INSTRUCTIONS
+    # =========================================================================
+    instructions:
+      # -----------------------------------------------------------------------
+      # TEXT INSTRUCTIONS
+      # -----------------------------------------------------------------------
+      # Free-form guidance for the AI on how to interpret and respond to queries
+      text_instructions:
+        - id: ti_currency
+          content:
+            - "CURRENCY FORMATTING: Always format monetary values with $ symbol and 2 decimal places."
+            - "Example: $1,234.56"
+        
+        - id: ti_dates
+          content:
+            - "DATE HANDLING: Use ISO format (YYYY-MM-DD) for date comparisons."
+            - "When users say 'this month', use CURRENT_DATE functions."
+            - "When users say 'last quarter', calculate the appropriate date range."
+        
+        - id: ti_metrics
+          content:
+            - |
+              KEY METRICS DEFINITIONS:
+              - Revenue = SUM(amount) from completed transactions
+              - Profit = Revenue - SUM(cost * quantity)
+              - Profit Margin = (Profit / Revenue) * 100
+              - Customer LTV = Total revenue from a customer over their lifetime
+        
+        - id: ti_hierarchy
+          content:
+            - |
+              EMPLOYEE HIERARCHY (Self-Join Pattern):
+              The employees table has a self-referential relationship where manager_id 
+              references employee_id. To find a manager chain:
+              
+              SELECT e.employee_name, m.employee_name AS manager_name
+              FROM employees e
+              LEFT JOIN employees m ON e.manager_id = m.employee_id
+        
+        - id: ti_exclusions
+          content:
+            - "ALWAYS exclude cancelled and refunded transactions unless specifically asked."
+            - "Default time range is last 30 days if not specified."
+
+      # -----------------------------------------------------------------------
+      # EXAMPLE QUESTION SQLS
+      # -----------------------------------------------------------------------
+      # Concrete examples of questions and their SQL implementations
+      example_question_sqls:
+        - id: eq_total_revenue
+          question:
+            - "What is our total revenue?"
+            - "How much did we make?"
+          sql:
+            - |
+              SELECT 
+                SUM(amount) AS total_revenue,
+                COUNT(*) AS transaction_count,
+                AVG(amount) AS average_order_value
+              FROM ${catalog}.${schema}.sales_transactions
+              WHERE status = 'COMPLETED'
+                AND transaction_date >= DATEADD(DAY, -30, CURRENT_DATE)
+          usage_guidance:
+            - "Use this pattern for revenue queries"
+            - "Modify date filter based on user's time range"
+        
+        - id: eq_top_customers
+          question:
+            - "Who are our top customers?"
+            - "Show me our best customers"
+          sql:
+            - |
+              SELECT 
+                c.customer_id,
+                c.customer_name,
+                c.customer_type,
+                SUM(s.amount) AS total_spent,
+                COUNT(s.transaction_id) AS order_count
+              FROM ${catalog}.${schema}.customers c
+              JOIN ${catalog}.${schema}.sales_transactions s 
+                ON c.customer_id = s.customer_id
+              WHERE s.status = 'COMPLETED'
+              GROUP BY c.customer_id, c.customer_name, c.customer_type
+              ORDER BY total_spent DESC
+              LIMIT 10
+          usage_guidance:
+            - "Adjust LIMIT based on user request"
+            - "Can filter by customer_type if specified"
+        
+        - id: eq_sales_by_category
+          question:
+            - "Sales breakdown by product category"
+          sql:
+            - |
+              SELECT 
+                p.category,
+                COUNT(DISTINCT s.transaction_id) AS orders,
+                SUM(s.quantity) AS units_sold,
+                SUM(s.amount) AS revenue,
+                SUM(s.amount - (p.cost * s.quantity)) AS profit
+              FROM ${catalog}.${schema}.sales_transactions s
+              JOIN ${catalog}.${schema}.products p ON s.product_id = p.product_id
+              WHERE s.status = 'COMPLETED'
+              GROUP BY p.category
+              ORDER BY revenue DESC
+        
+        - id: eq_with_params
+          question:
+            - "Show sales for a specific region and time period"
+          sql:
+            - |
+              SELECT 
+                transaction_date,
+                COUNT(*) AS transactions,
+                SUM(amount) AS daily_revenue
+              FROM ${catalog}.${schema}.sales_transactions
+              WHERE region = :region_filter
+                AND transaction_date BETWEEN :start_date AND :end_date
+                AND status = 'COMPLETED'
+              GROUP BY transaction_date
+              ORDER BY transaction_date
+          # Parameters use API format: default_value.values is an array
+          # Genie-forge also accepts: default_value.value (string) for convenience
+          parameters:
+            - name: region_filter
+              type_hint: STRING
+              description:
+                - "Region code to filter by (e.g., NA, EMEA, APAC)"
+              default_value:
+                values:
+                  - "NA"
+            
+            - name: start_date
+              type_hint: DATE
+              description:
+                - "Start date for the analysis period"
+              default_value:
+                values:
+                  - "TODAY - 30 DAYS"
+            
+            - name: end_date
+              type_hint: DATE
+              description:
+                - "End date for the analysis period"
+              default_value:
+                values:
+                  - "TODAY"
+          usage_guidance:
+            - "Parameters can be extracted from user's natural language"
+            - "Default to last 30 days if no date specified"
+        
+        - id: eq_manager_hierarchy
+          question:
+            - "Who reports to whom?"
+            - "Show me the org chart"
+          sql:
+            - |
+              SELECT 
+                e.employee_id,
+                e.employee_name,
+                e.job_title,
+                e.department,
+                m.employee_name AS manager_name,
+                m.job_title AS manager_title
+              FROM ${catalog}.${schema}.employees e
+              LEFT JOIN ${catalog}.${schema}.employees m 
+                ON e.manager_id = m.employee_id
+              ORDER BY COALESCE(e.manager_id, 0), e.employee_name
+          usage_guidance:
+            - "This is a self-join example"
+            - "NULL manager_id indicates top-level executive"
+
+      # -----------------------------------------------------------------------
+      # SQL FUNCTIONS
+      # -----------------------------------------------------------------------
+      # Custom SQL functions available in the catalog
+      sql_functions:
+        - identifier: "${catalog}.${schema}.calculate_profit_margin"
+          description: "Calculates profit margin percentage given revenue and cost"
+        
+        - identifier: "${catalog}.${schema}.get_fiscal_quarter"
+          description: "Returns fiscal quarter (Q1-Q4) for a given date"
+        
+        - identifier: "${catalog}.${schema}.format_currency"
+          description: "Formats a number as USD currency string"
+
+      # -----------------------------------------------------------------------
+      # JOIN SPECIFICATIONS
+      # -----------------------------------------------------------------------
+      # Define how tables should be joined
+      join_specs:
+        - id: js_sales_customers
+          left:
+            identifier: "${catalog}.${schema}.sales_transactions"
+            alias: "s"
+          right:
+            identifier: "${catalog}.${schema}.customers"
+            alias: "c"
+          sql:
+            - "s.customer_id = c.customer_id"
+          instruction:
+            - "Join sales transactions to customer master data"
+            - "Use for customer-level analysis"
+        
+        - id: js_sales_products
+          left:
+            identifier: "${catalog}.${schema}.sales_transactions"
+            alias: "s"
+          right:
+            identifier: "${catalog}.${schema}.products"
+            alias: "p"
+          sql:
+            - "s.product_id = p.product_id"
+          instruction:
+            - "Join sales to product catalog"
+            - "Use for product performance analysis"
+        
+        - id: js_sales_regions
+          left:
+            identifier: "${catalog}.${schema}.sales_transactions"
+            alias: "s"
+          right:
+            identifier: "${catalog}.${schema}.regions"
+            alias: "r"
+          sql:
+            - "s.region = r.region_code"
+          instruction:
+            - "Join sales to region reference data"
+        
+        - id: js_employee_manager
+          left:
+            identifier: "${catalog}.${schema}.employees"
+            alias: "e"
+          right:
+            identifier: "${catalog}.${schema}.employees"
+            alias: "m"
+          sql:
+            - "e.manager_id = m.employee_id"
+          instruction:
+            - "SELF-JOIN: Link employees to their managers"
+            - "Use LEFT JOIN to include employees without managers (executives)"
+
+      # -----------------------------------------------------------------------
+      # SQL SNIPPETS
+      # -----------------------------------------------------------------------
+      # Reusable SQL fragments for filters, expressions, and measures
+      sql_snippets:
+        filters:
+          - id: filter_completed
+            sql:
+              - "status = 'COMPLETED'"
+            display_name: "Completed Only"
+            instruction:
+              - "Filter to only completed transactions"
+              - "Use by default unless user asks for all statuses"
+            synonyms:
+              - "successful"
+              - "finished"
+              - "done"
+          
+          - id: filter_last_30_days
+            sql:
+              - "transaction_date >= DATEADD(DAY, -30, CURRENT_DATE)"
+            display_name: "Last 30 Days"
+            instruction:
+              - "Default time filter if no date specified"
+            synonyms:
+              - "recent"
+              - "this month"
+              - "lately"
+          
+          - id: filter_this_year
+            sql:
+              - "YEAR(transaction_date) = YEAR(CURRENT_DATE)"
+            display_name: "This Year"
+            instruction:
+              - "Year-to-date filter"
+            synonyms:
+              - "ytd"
+              - "year to date"
+              - "this year"
+          
+          - id: filter_high_value
+            sql:
+              - "amount >= 1000"
+            display_name: "High Value Orders"
+            instruction:
+              - "Filter to orders $1000 or more"
+            synonyms:
+              - "large orders"
+              - "big orders"
+              - "high ticket"
+          
+          - id: filter_active_products
+            sql:
+              - "is_active = true"
+            display_name: "Active Products"
+            instruction:
+              - "Only currently available products"
+        
+        expressions:
+          - id: expr_current_date
+            sql:
+              - "CURRENT_DATE"
+            display_name: "Today"
+            instruction:
+              - "Current date"
+            synonyms:
+              - "now"
+              - "today"
+          
+          - id: expr_month_name
+            sql:
+              - "DATE_FORMAT(transaction_date, 'MMMM yyyy')"
+            display_name: "Month Name"
+            instruction:
+              - "Format date as month name and year"
+          
+          - id: expr_quarter
+            sql:
+              - "CONCAT('Q', QUARTER(transaction_date), ' ', YEAR(transaction_date))"
+            display_name: "Quarter"
+            instruction:
+              - "Format as fiscal quarter (e.g., Q1 2024)"
+          
+          - id: expr_profit
+            sql:
+              - "(amount - (cost * quantity))"
+            display_name: "Profit"
+            instruction:
+              - "Calculate profit per transaction"
+            synonyms:
+              - "margin"
+              - "earnings"
+        
+        measures:
+          - id: measure_total_revenue
+            sql:
+              - "SUM(amount)"
+            display_name: "Total Revenue"
+            instruction:
+              - "Sum of all transaction amounts"
+            synonyms:
+              - "total sales"
+              - "revenue"
+              - "sales"
+          
+          - id: measure_total_profit
+            sql:
+              - "SUM(amount - (cost * quantity))"
+            display_name: "Total Profit"
+            instruction:
+              - "Total profit across transactions"
+            synonyms:
+              - "earnings"
+              - "net"
+          
+          - id: measure_profit_margin
+            sql:
+              - "ROUND(SUM(amount - (cost * quantity)) / SUM(amount) * 100, 2)"
+            display_name: "Profit Margin %"
+            instruction:
+              - "Profit as percentage of revenue"
+            synonyms:
+              - "margin"
+              - "margin percentage"
+          
+          - id: measure_avg_order
+            sql:
+              - "AVG(amount)"
+            display_name: "Average Order Value"
+            instruction:
+              - "Mean transaction amount"
+            synonyms:
+              - "aov"
+              - "average sale"
+              - "avg order"
+          
+          - id: measure_order_count
+            sql:
+              - "COUNT(DISTINCT transaction_id)"
+            display_name: "Order Count"
+            instruction:
+              - "Number of unique orders"
+            synonyms:
+              - "transactions"
+              - "orders"
+              - "sales count"
+          
+          - id: measure_unique_customers
+            sql:
+              - "COUNT(DISTINCT customer_id)"
+            display_name: "Unique Customers"
+            instruction:
+              - "Count of distinct customers"
+            synonyms:
+              - "customer count"
+              - "buyers"
+
+    # =========================================================================
+    # BENCHMARKS (Optional)
+    # =========================================================================
+    # Test questions to validate the space configuration
+    # Each question needs an expected_sql to verify Genie generates correct queries
+    benchmarks:
+      questions:
+        - question: "What was our total revenue last month?"
+          expected_sql: |
+            SELECT SUM(amount) AS total_revenue
+            FROM ${catalog}.${schema}.sales_transactions
+            WHERE status = 'COMPLETED'
+              AND transaction_date >= DATEADD(MONTH, -1, CURRENT_DATE)
+        
+        - question: "What are the top 5 products by sales?"
+          expected_sql: |
+            SELECT p.product_name, SUM(s.amount) AS total_sales
+            FROM ${catalog}.${schema}.sales_transactions s
+            JOIN ${catalog}.${schema}.products p ON s.product_id = p.product_id
+            WHERE s.status = 'COMPLETED'
+            GROUP BY p.product_name
+            ORDER BY total_sales DESC
+            LIMIT 5
+        
+        - question: "Compare B2B vs B2C customer spending"
+          expected_sql: |
+            SELECT c.customer_type, SUM(s.amount) AS total_spent
+            FROM ${catalog}.${schema}.sales_transactions s
+            JOIN ${catalog}.${schema}.customers c ON s.customer_id = c.customer_id
+            WHERE s.status = 'COMPLETED'
+            GROUP BY c.customer_type
+        
+        - question: "Show me John Smith's reporting chain"
+          expected_sql: |
+            WITH RECURSIVE manager_chain AS (
+              SELECT employee_id, employee_name, manager_id, 1 AS level
+              FROM ${catalog}.${schema}.employees
+              WHERE employee_name = 'John Smith'
+              UNION ALL
+              SELECT e.employee_id, e.employee_name, e.manager_id, mc.level + 1
+              FROM ${catalog}.${schema}.employees e
+              JOIN manager_chain mc ON e.employee_id = mc.manager_id
+            )
+            SELECT * FROM manager_chain ORDER BY level

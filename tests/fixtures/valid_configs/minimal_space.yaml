@@ -1,0 +1,9 @@
+# Minimal valid configuration for testing
+version: 2
+spaces:
+  - space_id: "minimal_test"
+    title: "Minimal Test Space"
+    warehouse_id: "test_warehouse_123"
+    data_sources:
+      tables:
+        - identifier: "catalog.schema.table"

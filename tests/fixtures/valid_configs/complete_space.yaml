@@ -1,0 +1,248 @@
+# Complete Genie space configuration with all API v2 fields
+# This fixture tests lossless round-trip serialization
+version: 2
+spaces:
+  - space_id: "complete_test"
+    title: "Complete Test Space"
+    description: "A fully configured Genie space for testing"
+    warehouse_id: "test_warehouse_456"
+    parent_path: "/Workspace/Users/test@example.com/genie-forge"
+    author: "Test Author"
+    tags:
+      - "test"
+      - "complete"
+
+    # Sample questions shown in Genie UI
+    sample_questions:
+      - id: "sq1"
+        question:
+          - "What is the total revenue?"
+      - id: "sq2"
+        question:
+          - "Show me top customers by sales"
+      - "How many orders this month?"  # Backward compat: simple string
+
+    # Data sources with full column configuration
+    data_sources:
+      tables:
+        - identifier: "catalog.schema.sales"
+          description:
+            - "Sales transactions table"
+            - "Updated daily from source systems"
+          column_configs:
+            - column_name: "order_id"
+              description:
+                - "Unique order identifier"
+              synonyms:
+                - "transaction_id"
+                - "sale_id"
+              enable_format_assistance: true
+              enable_entity_matching: false
+
+            - column_name: "customer_name"
+              description:
+                - "Customer full name"
+              synonyms:
+                - "buyer"
+                - "client"
+              enable_format_assistance: true
+              enable_entity_matching: true
+
+            - column_name: "amount"
+              description:
+                - "Order amount in USD"
+              synonyms:
+                - "total"
+                - "value"
+                - "price"
+              enable_format_assistance: true
+              enable_entity_matching: false
+
+            - column_name: "order_date"
+              description:
+                - "Date when order was placed"
+              synonyms:
+                - "date"
+                - "transaction_date"
+              enable_format_assistance: true
+              enable_entity_matching: false
+
+        - identifier: "catalog.schema.customers"
+          description:
+            - "Customer master data"
+          column_configs:
+            - column_name: "customer_id"
+              description:
+                - "Primary customer identifier"
+              enable_format_assistance: true
+              enable_entity_matching: true
+
+            - column_name: "region"
+              description:
+                - "Customer region"
+              synonyms:
+                - "territory"
+                - "area"
+              enable_format_assistance: true
+              enable_entity_matching: true
+
+    # Instructions section
+    instructions:
+      # Text instructions
+      text_instructions:
+        - id: "ti1"
+          content:
+            - "Always filter by date range when showing historical data"
+        - id: "ti2"
+          content:
+            - "Use customer_name for display, customer_id for joins"
+            - "Prefer SUM over COUNT for revenue metrics"
+
+      # Example question SQLs with parameters
+      example_question_sqls:
+        - id: "ex1"
+          question:
+            - "What is the total revenue for a specific date range?"
+          sql:
+            - "SELECT SUM(amount) as total_revenue FROM catalog.schema.sales WHERE order_date BETWEEN :start_date AND :end_date"
+          parameters:
+            - name: "start_date"
+              type_hint: "DATE"
+              description:
+                - "Start of date range"
+              default_value:
+                values:
+                  - "2024-01-01"
+            - name: "end_date"
+              type_hint: "DATE"
+              description:
+                - "End of date range"
+              default_value:
+                values:
+                  - "2024-12-31"
+          usage_guidance:
+            - "Use this when user asks for revenue in a time period"
+            - "Handles quarterly and yearly queries"
+
+        - id: "ex2"
+          question:
+            - "Who are the top N customers?"
+          sql:
+            - "SELECT customer_name, SUM(amount) as total FROM catalog.schema.sales GROUP BY customer_name ORDER BY total DESC LIMIT :top_n"
+          parameters:
+            - name: "top_n"
+              type_hint: "INT"
+              description:
+                - "Number of top customers to return"
+              default_value:
+                values:
+                  - "10"
+          usage_guidance:
+            - "Use for top customer analysis"
+
+      # SQL functions
+      sql_functions:
+        - identifier: "catalog.schema.format_currency"
+          description: "Formats a number as USD currency"
+        - identifier: "catalog.schema.fiscal_quarter"
+          description: "Returns fiscal quarter for a date"
+
+      # Join specifications
+      join_specs:
+        - id: "js1"
+          left:
+            identifier: "catalog.schema.sales"
+            alias: "s"
+          right:
+            identifier: "catalog.schema.customers"
+            alias: "c"
+          sql:
+            - "s.customer_id = c.customer_id"
+            - "--rt=FROM_RELATIONSHIP_TYPE_MANY_TO_ONE--"
+          instruction:
+            - "Join sales to customers for customer details"
+            - "Use when customer attributes are needed"
+
+      # SQL snippets (filters, expressions, measures)
+      sql_snippets:
+        filters:
+          - id: "f1"
+            sql:
+              - "order_date >= DATE_SUB(CURRENT_DATE(), 30)"
+            display_name: "Last 30 Days"
+            instruction:
+              - "Filter to recent orders"
+            synonyms:
+              - "recent"
+              - "this month"
+
+          - id: "f2"
+            sql:
+              - "amount > 1000"
+            display_name: "Large Orders"
+            instruction:
+              - "Filter to orders over $1000"
+            synonyms:
+              - "big orders"
+              - "high value"
+
+        expressions:
+          - id: "e1"
+            sql:
+              - "CURRENT_DATE()"
+            display_name: "Today"
+            instruction:
+              - "Current date"
+            synonyms:
+              - "now"
+              - "today"
+
+          - id: "e2"
+            sql:
+              - "DATE_TRUNC('MONTH', order_date)"
+            display_name: "Month"
+            instruction:
+              - "Truncate date to month for grouping"
+            synonyms:
+              - "monthly"
+              - "by month"
+
+        measures:
+          - id: "m1"
+            sql:
+              - "SUM(amount)"
+            display_name: "Total Revenue"
+            instruction:
+              - "Sum of all order amounts"
+            synonyms:
+              - "revenue"
+              - "total sales"
+              - "sum"
+
+          - id: "m2"
+            sql:
+              - "COUNT(DISTINCT customer_id)"
+            display_name: "Unique Customers"
+            instruction:
+              - "Count of distinct customers"
+            synonyms:
+              - "customer count"
+              - "number of customers"
+
+          - id: "m3"
+            sql:
+              - "AVG(amount)"
+            display_name: "Average Order Value"
+            instruction:
+              - "Average amount per order"
+            synonyms:
+              - "AOV"
+              - "avg order"
+
+    # Benchmarks for testing
+    benchmarks:
+      questions:
+        - question: "What is the total revenue?"
+          expected_sql: "SELECT SUM(amount) FROM catalog.schema.sales"
+        - question: "How many customers?"
+          expected_sql: "SELECT COUNT(DISTINCT customer_id) FROM catalog.schema.customers"

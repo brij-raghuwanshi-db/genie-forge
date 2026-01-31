@@ -1,0 +1,52 @@
+# Simple Genie Space Configuration
+# ===========================================
+# A minimal example showing required fields only.
+# Great for quick demos or simple use cases.
+# Updated to version 2 format with IDs
+
+version: 2
+
+spaces:
+  - space_id: "simple_demo"
+    title: "Simple Demo Space"
+    description: "A minimal Genie space for quick demos and simple use cases"
+    warehouse_id: "${warehouse_id}"
+    
+    # Sample questions (IDs auto-generated)
+    sample_questions:
+      - "Show all records"
+      - "Count total rows"
+      - "Show recent entries"
+    
+    # Data sources with column configs
+    data_sources:
+      tables:
+        - identifier: "${catalog}.${schema}.sales"
+          description:
+            - "Sales transactions table for quick testing"
+            - "Contains transaction data with amounts and dates"
+          column_configs:
+            - column_name: amount
+              description:
+                - "Transaction amount in USD"
+              synonyms:
+                - "revenue"
+                - "total"
+              enable_format_assistance: true
+            - column_name: sale_date
+              description:
+                - "Date of the transaction"
+              synonyms:
+                - "date"
+              enable_format_assistance: true
+            - column_name: sale_id
+              description:
+                - "Unique identifier for each sale"
+              enable_format_assistance: true
+    
+    # Basic instructions (IDs auto-generated)
+    instructions:
+      text_instructions:
+        - content:
+            - "This is a simple demo space for testing basic queries"
+            - "Format currency values with 2 decimal places"

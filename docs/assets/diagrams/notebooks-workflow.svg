@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" style="max-width: 100%; height: auto;">
+  <defs>
+    <marker id="nArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#7c3aed"/>
+    </marker>
+    <linearGradient id="nbStart" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <linearGradient id="nbPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="nbBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="nbOrange" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <filter id="nbShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <style>
+    .nb-node { filter: url(#nbShadow); }
+    .nb-text { fill: white; font-family: system-ui, sans-serif; font-size: 11px; font-weight: 500; }
+    .nb-label { fill: #71717a; font-family: system-ui, sans-serif; font-size: 10px; }
+    .nb-flow {
+      stroke: #7c3aed;
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 8 4;
+      animation: nbMove 0.6s linear infinite;
+    }
+    @keyframes nbMove { to { stroke-dashoffset: -12; } }
+    .live { animation: nbPulse 1.5s infinite; }
+    @keyframes nbPulse { 50% { opacity: 0.5; } }
+  </style>
+  
+  <!-- LIVE Badge -->
+  <g class="live"><rect x="680" y="10" width="55" height="20" rx="10" fill="#10b981"/><text x="707" y="24" text-anchor="middle" fill="white" font-family="system-ui" font-size="10" font-weight="bold">LIVE</text></g>
+  
+  <!-- Start -->
+  <ellipse class="nb-node" cx="375" cy="35" rx="40" ry="20" fill="url(#nbStart)"/>
+  <text class="nb-text" x="375" y="40" text-anchor="middle">Start</text>
+  
+  <path class="nb-flow" d="M 375 55 L 375 75" marker-end="url(#nArrow)"/>
+  
+  <!-- 00_Setup -->
+  <rect class="nb-node" x="275" y="80" width="200" height="35" rx="6" fill="url(#nbPurple)"/>
+  <text class="nb-text" x="375" y="103" text-anchor="middle">00_Setup_Prerequisites</text>
+  
+  <path class="nb-flow" d="M 375 115 L 375 135" marker-end="url(#nArrow)"/>
+  
+  <!-- Environment Decision -->
+  <polygon class="nb-node" points="375,145 440,175 375,205 310,175" fill="url(#nbStart)"/>
+  <text class="nb-text" x="375" y="180" text-anchor="middle" font-size="10">Environment?</text>
+  
+  <!-- Databricks path -->
+  <path class="nb-flow" d="M 310 175 L 200 175" marker-end="url(#nArrow)"/>
+  <text class="nb-label" x="255" y="165">Databricks</text>
+  <rect class="nb-node" x="60" y="155" width="130" height="40" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="125" y="172" text-anchor="middle" font-size="10">Unity Catalog</text>
+  <text class="nb-text" x="125" y="186" text-anchor="middle" font-size="10">Volume</text>
+  
+  <!-- Local path -->
+  <path class="nb-flow" d="M 440 175 L 550 175" marker-end="url(#nArrow)"/>
+  <text class="nb-label" x="480" y="165">Local</text>
+  <rect class="nb-node" x="560" y="155" width="130" height="40" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="625" y="172" text-anchor="middle" font-size="10">~/.genie-forge/</text>
+  <text class="nb-text" x="625" y="186" text-anchor="middle" font-size="10">local files</text>
+  
+  <!-- Converge to Core Workflow -->
+  <path class="nb-flow" d="M 125 195 L 125 230 L 330 230" marker-end="url(#nArrow)"/>
+  <path class="nb-flow" d="M 625 195 L 625 230 L 420 230" marker-end="url(#nArrow)"/>
+  
+  <!-- 01_Core_Workflow -->
+  <rect class="nb-node" x="275" y="215" width="200" height="35" rx="6" fill="url(#nbPurple)"/>
+  <text class="nb-text" x="375" y="238" text-anchor="middle">01_Core_Workflow</text>
+  
+  <path class="nb-flow" d="M 375 250 L 375 270" marker-end="url(#nArrow)"/>
+  
+  <!-- What Next Decision -->
+  <polygon class="nb-node" points="375,280 440,305 375,330 310,305" fill="url(#nbOrange)"/>
+  <text class="nb-text" x="375" y="310" text-anchor="middle" font-size="9">What next?</text>
+  
+  <!-- Four branches -->
+  <!-- Space Ops -->
+  <path class="nb-flow" d="M 310 305 L 120 305 L 120 340" marker-end="url(#nArrow)"/>
+  <rect class="nb-node" x="40" y="345" width="160" height="35" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="120" y="368" text-anchor="middle" font-size="10">02_Space_Operations</text>
+  
+  <!-- State Mgmt -->
+  <path class="nb-flow" d="M 340 330 L 260 355 L 260 345" marker-end="url(#nArrow)"/>
+  <rect class="nb-node" x="180" y="345" width="160" height="35" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="260" y="368" text-anchor="middle" font-size="10">03_State_Management</text>
+  
+  <!-- Migration -->
+  <path class="nb-flow" d="M 410 330 L 490 355 L 490 345" marker-end="url(#nArrow)"/>
+  <rect class="nb-node" x="410" y="345" width="160" height="35" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="490" y="368" text-anchor="middle" font-size="10">04_Migration</text>
+  
+  <!-- Advanced -->
+  <path class="nb-flow" d="M 440 305 L 630 305 L 630 340" marker-end="url(#nArrow)"/>
+  <rect class="nb-node" x="550" y="345" width="160" height="35" rx="6" fill="url(#nbBlue)"/>
+  <text class="nb-text" x="630" y="368" text-anchor="middle" font-size="10">05_Advanced_Patterns</text>
+</svg>

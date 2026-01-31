@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 150" style="max-width: 100%; height: auto;">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="gradGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="sh">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <style>
+    .box { filter: url(#sh); }
+    .txt { fill: white; font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+    .label { fill: #71717a; font-family: system-ui, sans-serif; font-size: 10px; }
+    .flow {
+      stroke: #7c3aed;
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 8 4;
+      animation: move 0.5s linear infinite;
+    }
+    @keyframes move { to { stroke-dashoffset: -12; } }
+    .live { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 50% { opacity: 0.6; } }
+  </style>
+  
+  <!-- LIVE -->
+  <g class="live"><rect x="630" y="8" width="55" height="20" rx="10" fill="#10b981"/><text x="657" y="22" text-anchor="middle" fill="white" font-family="system-ui" font-size="10" font-weight="bold">LIVE</text></g>
+  
+  <!-- validate -->
+  <rect class="box" x="20" y="50" width="90" height="45" rx="8" fill="url(#grad)"/>
+  <text class="txt" x="65" y="78" text-anchor="middle">validate</text>
+  
+  <path class="flow" d="M 110 72 L 145 72" marker-end="url(#arr)"/>
+  
+  <!-- plan -->
+  <rect class="box" x="150" y="50" width="70" height="45" rx="8" fill="url(#grad)"/>
+  <text class="txt" x="185" y="78" text-anchor="middle">plan</text>
+  
+  <path class="flow" d="M 220 72 L 255 72" marker-end="url(#arr)"/>
+  
+  <!-- Review -->
+  <polygon class="box" points="305,50 355,72 305,95 255,72" fill="url(#gradGreen)"/>
+  <text class="txt" x="305" y="77" text-anchor="middle" font-size="12">Review</text>
+  
+  <path class="flow" d="M 355 72 L 390 72" marker-end="url(#arr)"/>
+  <text x="367" y="62" fill="#10b981" font-size="9">Approve</text>
+  
+  <!-- apply -->
+  <rect class="box" x="395" y="50" width="70" height="45" rx="8" fill="url(#grad)"/>
+  <text class="txt" x="430" y="78" text-anchor="middle">apply</text>
+  
+  <path class="flow" d="M 465 72 L 500 72" marker-end="url(#arr)"/>
+  
+  <!-- status -->
+  <rect class="box" x="505" y="50" width="70" height="45" rx="8" fill="url(#grad)"/>
+  <text class="txt" x="540" y="78" text-anchor="middle">status</text>
+  
+  <path class="flow" d="M 575 72 L 610 72" marker-end="url(#arr)"/>
+  
+  <!-- drift -->
+  <rect class="box" x="615" y="50" width="60" height="45" rx="8" fill="url(#grad)"/>
+  <text class="txt" x="645" y="78" text-anchor="middle">drift</text>
+  
+  <!-- Reject loop back -->
+  <path class="flow" d="M 305 95 L 305 125 L 65 125 L 65 100" marker-end="url(#arr)" style="animation-direction: reverse;"/>
+  <text x="185" y="138" text-anchor="middle" fill="#ef4444" font-family="system-ui" font-size="9">Reject ’ Edit Config</text>
+</svg>

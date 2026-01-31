@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" style="max-width: 100%; height: auto;">
+  <defs>
+    <!-- Animated arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    
+    <!-- Glow filter for nodes -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Gradient for nodes -->
+    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="decisionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <style>
+    .node-rect { fill: url(#nodeGradient); rx: 8; ry: 8; filter: url(#glow); }
+    .node-rect:hover { transform: scale(1.05); transform-origin: center; }
+    .node-text { fill: white; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 600; }
+    .decision { fill: url(#decisionGradient); filter: url(#glow); }
+    
+    /* Animated flowing arrows */
+    .flow-line {
+      stroke: #7c3aed;
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 8 4;
+      animation: flowMove 0.6s linear infinite;
+    }
+    
+    @keyframes flowMove {
+      0% { stroke-dashoffset: 12; }
+      100% { stroke-dashoffset: 0; }
+    }
+    
+    /* Pulse animation for LIVE badge */
+    .live-badge { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+  </style>
+  
+  <!-- LIVE Badge -->
+  <g class="live-badge">
+    <rect x="720" y="10" width="60" height="24" rx="12" fill="#10b981"/>
+    <text x="750" y="27" text-anchor="middle" fill="white" font-family="system-ui" font-size="12" font-weight="bold">LIVE</text>
+  </g>
+  
+  <!-- Nodes -->
+  <!-- validate -->
+  <g transform="translate(30, 80)">
+    <rect class="node-rect" width="80" height="40"/>
+    <text class="node-text" x="40" y="25" text-anchor="middle">validate</text>
+  </g>
+  
+  <!-- Arrow: validate -> plan -->
+  <path class="flow-line" d="M 110 100 L 150 100" marker-end="url(#arrowhead)"/>
+  
+  <!-- plan -->
+  <g transform="translate(160, 80)">
+    <rect class="node-rect" width="80" height="40"/>
+    <text class="node-text" x="40" y="25" text-anchor="middle">plan</text>
+  </g>
+  
+  <!-- Arrow: plan -> Review -->
+  <path class="flow-line" d="M 240 100 L 280 100" marker-end="url(#arrowhead)"/>
+  
+  <!-- Review (decision diamond) -->
+  <g transform="translate(330, 100)">
+    <polygon class="decision" points="0,0 50,-40 100,0 50,40"/>
+    <text class="node-text" x="50" y="5" text-anchor="middle">Review</text>
+  </g>
+  
+  <!-- Arrow: Review -> apply (Approve) -->
+  <path class="flow-line" d="M 430 100 L 470 100" marker-end="url(#arrowhead)"/>
+  <text x="445" y="90" fill="#10b981" font-family="system-ui" font-size="11">Approve</text>
+  
+  <!-- Arrow: Review -> Edit (Reject) -->
+  <path class="flow-line" d="M 330 140 L 330 170 L 200 170 L 200 140" marker-end="url(#arrowhead)" style="animation-direction: reverse;"/>
+  <text x="265" y="185" fill="#ef4444" font-family="system-ui" font-size="11">Reject</text>
+  
+  <!-- apply -->
+  <g transform="translate(480, 80)">
+    <rect class="node-rect" width="80" height="40"/>
+    <text class="node-text" x="40" y="25" text-anchor="middle">apply</text>
+  </g>
+  
+  <!-- Arrow: apply -> status -->
+  <path class="flow-line" d="M 560 100 L 600 100" marker-end="url(#arrowhead)"/>
+  
+  <!-- status -->
+  <g transform="translate(610, 80)">
+    <rect class="node-rect" width="80" height="40"/>
+    <text class="node-text" x="40" y="25" text-anchor="middle">status</text>
+  </g>
+  
+  <!-- Arrow: status -> drift -->
+  <path class="flow-line" d="M 690 100 L 730 100" marker-end="url(#arrowhead)"/>
+  
+  <!-- drift -->
+  <g transform="translate(740, 80)">
+    <rect class="node-rect" width="50" height="40"/>
+    <text class="node-text" x="25" y="25" text-anchor="middle" font-size="12">drift</text>
+  </g>
+  
+  <!-- Loop back from drift -->
+  <path class="flow-line" d="M 765 120 L 765 170 L 70 170 L 70 130" marker-end="url(#arrowhead)" style="animation-direction: reverse;"/>
+  <text x="420" y="185" fill="#7c3aed" font-family="system-ui" font-size="11">Changes Detected</text>
+</svg>

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" style="max-width: 100%; height: auto;">
+  <defs>
+    <marker id="migArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    <linearGradient id="sourceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="filesGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <linearGradient id="targetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="migShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <style>
+    .stage { filter: url(#migShadow); }
+    .stageTitle { fill: white; font-family: system-ui, sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+    .nodeText { fill: white; font-family: system-ui, sans-serif; font-size: 12px; font-weight: 500; }
+    .flow {
+      stroke: #7c3aed;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-dasharray: 10 5;
+      animation: flowMig 0.6s linear infinite;
+    }
+    @keyframes flowMig { to { stroke-dashoffset: -15; } }
+    .live { animation: livePulse 1.5s infinite; }
+    @keyframes livePulse { 50% { opacity: 0.5; } }
+  </style>
+  
+  <!-- LIVE Badge -->
+  <g class="live"><rect x="725" y="10" width="55" height="20" rx="10" fill="#10b981"/><text x="752" y="24" text-anchor="middle" fill="white" font-family="system-ui" font-size="10" font-weight="bold">LIVE</text></g>
+  
+  <!-- Source Workspace -->
+  <g transform="translate(20, 35)">
+    <rect class="stage" width="200" height="130" rx="10" fill="url(#sourceGrad)" opacity="0.15"/>
+    <rect width="200" height="26" rx="10" fill="url(#sourceGrad)"/>
+    <text class="stageTitle" x="100" y="18" text-anchor="middle">Source Workspace</text>
+    
+    <rect x="20" y="45" width="160" height="32" rx="6" fill="url(#sourceGrad)"/>
+    <text class="nodeText" x="100" y="66" text-anchor="middle">Existing Space</text>
+    
+    <rect x="20" y="90" width="160" height="32" rx="6" fill="url(#sourceGrad)" opacity="0.8"/>
+    <text class="nodeText" x="100" y="111" text-anchor="middle">space-export</text>
+  </g>
+  
+  <!-- Arrow to Files -->
+  <path class="flow" d="M 220 100 L 280 100" marker-end="url(#migArrow)"/>
+  
+  <!-- Configuration Files -->
+  <g transform="translate(290, 35)">
+    <rect class="stage" width="200" height="130" rx="10" fill="url(#filesGrad)" opacity="0.15"/>
+    <rect width="200" height="26" rx="10" fill="url(#filesGrad)"/>
+    <text class="stageTitle" x="100" y="18" text-anchor="middle">Config Files</text>
+    
+    <rect x="20" y="45" width="160" height="32" rx="6" fill="url(#filesGrad)"/>
+    <text class="nodeText" x="100" y="66" text-anchor="middle">YAML Config</text>
+    
+    <rect x="20" y="90" width="160" height="32" rx="6" fill="url(#filesGrad)" opacity="0.8"/>
+    <text class="nodeText" x="100" y="111" text-anchor="middle">Edit Variables</text>
+  </g>
+  
+  <!-- Arrow to Target -->
+  <path class="flow" d="M 490 100 L 550 100" marker-end="url(#migArrow)"/>
+  
+  <!-- Target Workspace -->
+  <g transform="translate(560, 35)">
+    <rect class="stage" width="200" height="130" rx="10" fill="url(#targetGrad)" opacity="0.15"/>
+    <rect width="200" height="26" rx="10" fill="url(#targetGrad)"/>
+    <text class="stageTitle" x="100" y="18" text-anchor="middle">Target Workspace</text>
+    
+    <rect x="20" y="40" width="70" height="28" rx="6" fill="url(#targetGrad)"/>
+    <text class="nodeText" x="55" y="59" text-anchor="middle" font-size="11">plan</text>
+    
+    <rect x="110" y="40" width="70" height="28" rx="6" fill="url(#targetGrad)"/>
+    <text class="nodeText" x="145" y="59" text-anchor="middle" font-size="11">apply</text>
+    
+    <path class="flow" d="M 90 54 L 105 54" marker-end="url(#migArrow)" style="stroke-width: 1.5;"/>
+    
+    <rect x="20" y="85" width="160" height="35" rx="6" fill="url(#targetGrad)" opacity="0.9"/>
+    <text class="nodeText" x="100" y="108" text-anchor="middle">New Space </text>
+  </g>
+</svg>

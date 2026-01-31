@@ -1,0 +1,176 @@
+site_name: Genie-Forge
+site_url: https://brij-raghuwanshi-db.github.io/genie-forge/
+site_description: Infrastructure as Code for Databricks Genie Spaces
+site_author: Brijendra Singh Raghuwanshi
+repo_url: https://github.com/brij-raghuwanshi-db/genie-forge
+repo_name: genie-forge
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2024-2026 Databricks Labs
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            docstring_style: google
+            merge_init_into_class: true
+            show_signature_annotations: true
+  # - git-revision-date-localized:  # Uncomment when git history is available
+  #     enable_creation_date: true
+  #     type: timeago
+  # - panzoom:  # Uncomment for zoom/pan on diagrams
+  #     full_screen: true
+  #     activate_on: alt
+  # - mkdocs-video:  # Uncomment when adding video content
+  #     is_video: true
+  #     video_autoplay: false
+  #     video_controls: true
+  - minify:
+      minify_html: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid.js
+  - javascripts/extra.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/brij-raghuwanshi-db/genie-forge
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/genie-forge/
+  generator: false
+  version:
+    provider: mike
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # PyMdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      auto_title: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: databrickslabs
+      repo: genie-forge
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - docs/includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Quick Start: guide/getting-started.md
+      - Installation: guide/installation.md
+      - CLI Reference: guide/cli.md
+      - Configuration: guide/configuration.md
+      - User Journeys: guide/user-journeys.md
+      - Troubleshooting: guide/troubleshooting.md
+  - Reference:
+      - Architecture: reference/architecture.md
+      - API: reference/api.md
+  - Tutorials:
+      - Notebooks Overview: tutorials/notebooks-overview.md
+      - Setup Prerequisites: tutorials/00-setup.md
+      - Core Workflow: tutorials/01-core-workflow.md
+      - Space Operations: tutorials/02-space-operations.md
+      - State Management: tutorials/03-state-management.md
+      - Cross-Workspace Migration: tutorials/04-migration.md
+      - Advanced Patterns: tutorials/05-advanced.md
+      - CLI Playground: tutorials/cli-playground.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md

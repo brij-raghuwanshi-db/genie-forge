@@ -1,0 +1,42 @@
+# Development Environment Configuration
+# ===========================================
+# This file defines variables and settings for the dev environment.
+# Variables can be referenced in space configs using ${variable_name}
+#
+# ⚠️  IMPORTANT: Replace all <PLACEHOLDER> values before use!
+
+# Workspace settings
+# TODO: Replace with your actual dev workspace URL
+workspace_url: "<YOUR_DEV_WORKSPACE_URL>"  # e.g., "https://adb-1234567890.azuredatabricks.net"
+
+# Authentication (use profile from ~/.databrickscfg)
+# TODO: Replace with your actual profile name
+auth:
+  profile: "<YOUR_DEV_PROFILE>"  # e.g., "DEV" or your profile name from ~/.databrickscfg
+
+# Environment-specific variables
+variables:
+  # Environment name
+  env: "dev"
+  
+  # SQL warehouse ID
+  warehouse_id: "6c5c02379eea0732"
+  
+  # Unity Catalog name
+  catalog: "brij_cat"
+  
+  # Schema name
+  schema: "default"
+  
+  # Parent path for Genie spaces
+  parent_path: "/Workspace/Users/brijendra.raghuwanshi@databricks.com"
+
+# Naming conventions
+naming:
+  prefix: ""  # No prefix for dev
+  title_prefix: "[DEV] "  # Optional title prefix
+
+# Settings
+settings:
+  auto_approve: false  # Require confirmation
+  dry_run: false

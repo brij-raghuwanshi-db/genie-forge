@@ -1,0 +1,71 @@
+space_id: brij_imported
+title: Brij_Space
+warehouse_id: 6c5c02379eea0732
+sample_questions:
+- !!python/object:genie_forge.models.SampleQuestion
+  __dict__:
+    id: 01f0fbe3f3231ce4b489307d554ee87b
+    question:
+    - 'sample questions : what is this table?'
+  __pydantic_extra__: null
+  __pydantic_fields_set__: !!set
+    id: null
+    question: null
+  __pydantic_private__: null
+data_sources:
+  tables:
+  - identifier: brij_cat.default.employee_table
+    column_configs:
+    - column_name: country
+      description:
+      - Get me this employee 4
+      synonyms:
+      - ghj
+    - column_name: employee_id
+      description:
+      - Get me this employee 1
+      synonyms:
+      - abc
+    - column_name: employee_name
+      description:
+      - Get me this employee 2
+      synonyms:
+      - cdf
+    - column_name: state
+      description:
+      - Get me this employee 3
+      synonyms:
+      - fgh
+  - identifier: brij_cat.default.requirements
+    column_configs:
+    - column_name: value
+      description:
+      - sample value
+      synonyms:
+      - val
+instructions:
+  text_instructions:
+  - content:
+    - This is a test instruction
+  example_question_sqls:
+  - question:
+    - who am i
+    sql:
+    - SELECT current_user()
+  - question:
+    - sample
+    sql:
+    - 'select :param_test as col; '
+  join_specs:
+  - id: 01f0fbe36c3f1b7494fa093204a16bb7
+    left:
+      identifier: brij_cat.default.employee_table
+      alias: employee_table
+    right:
+      identifier: brij_cat.default.requirements
+      alias: requirements
+    sql:
+    - '`employee_table`.`state` = `requirements`.`value`'
+    - --rt=FROM_RELATIONSHIP_TYPE_MANY_TO_MANY--
+    instruction:
+    - aggregation

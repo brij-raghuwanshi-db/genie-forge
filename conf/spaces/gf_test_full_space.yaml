@@ -1,0 +1,23 @@
+title: GF_Test_Full_Space
+warehouse_id: 6c5c02379eea0732
+description: Full-featured test space demonstrating all genie-forge capabilities
+parent_path: /Workspace/Users/brijendra.raghuwanshi@databricks.com
+data_sources:
+  tables:
+  - identifier: brij_cat.default.sales
+  - identifier: brij_cat.default.customers
+  - identifier: brij_cat.default.products
+  - identifier: brij_cat.default.employees
+instructions:
+  text_instructions:
+  - text: Use SUM for revenue calculations
+  - text: Filter completed transactions by default
+  - text: Join sales with customers using customer_id
+  sql_functions:
+  - identifier: brij_cat.default.calculate_tenure_years
+  - identifier: brij_cat.default.percent_change
+sample_questions:
+- question: What is total revenue?
+- question: Who are our top 10 customers?
+- question: Show sales trend by month
+- question: Compare revenue by region
